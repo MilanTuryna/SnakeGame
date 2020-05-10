@@ -1,0 +1,31 @@
+<html>
+<head>
+    <title>Snake - Turyna.eu</title>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+</head>
+<style>
+    body {
+        margin:0;
+        padding:0;
+        background-color:#30380e
+    }
+
+    #appGame {
+        position:absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-box-shadow: 2px -1px 28px -13px rgba(0,0,0,0.75);
+        -moz-box-shadow: 2px -1px 28px -13px rgba(0,0,0,0.75);
+        box-shadow: 2px -1px 28px -13px rgba(0,0,0,0.75);
+        transform: translate(-50%, -50%);
+    }
+</style>
+<body>
+<canvas width="608" height="608" id="appGame"></canvas>
+<script>if(document.documentMode||/Edge/.test(navigator.userAgent)||/Edg/.test(navigator.userAgent)) document.getElementsByTagName('body')[0].textContent = 'Tento prohlížeč není podporován';</script>
+<script src="js/canvasUtils.js"></script>
+<script src="js/snakeMessages.js"></script>
+<script src="js/snakeGame.js"></script>
+</body>
+</html>
