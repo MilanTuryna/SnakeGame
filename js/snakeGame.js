@@ -36,7 +36,7 @@ class SnakeGame {
     /**
      * @returns {{x: number, y: number}}
      */
-    foodObject() {
+    foodObject() { // funkce na vytvoření nového místa pro jablko
         return {
             x: Math.floor(Math.random() * 17 + 1) * this.box,
             y: Math.floor(Math.random() * 15 + 3) * this.box
@@ -67,13 +67,13 @@ class SnakeGame {
     }
 
     logic() {
-        this.drawCanvas();
+        this.drawCanvas(); // vykreslí se hrací pole (canvas)
 
         if(this.started) { // pokud už hra začala (kliknutím na šipku)
             this.time++; // bude se přidávat do třidní proměnné každých 100ms (this.interval) a poté se vydělí.. this.time/(this.interval/10)
         }
 
-        for(let i = 0; i < this.snake.length ; i++){
+        for(let i = 0; i < this.snake.length ; i++){ // vykreslování hada
             this.ctx.fillStyle = "green";
             this.ctx.fillRect(this.snake[i].x,this.snake[i].y,this.box,this.box); // čtvereček hada
 
@@ -128,17 +128,17 @@ class SnakeGame {
         let key = event.keyCode;
         if(key === 37 || key === 38 || key === 39 || key === 40) this.started = true;
         if(key === 37 && this.d !== "r") {
-            this.d = "l"; // left
+            this.d = "l"; // doleva
         } else if(key === 38 && this.d !== "d") {
-            this.d = "u"; //up
+            this.d = "u"; // nahoru
         } else if(key === 39 && this.d !== "l") {
-            this.d = "r"; // right
+            this.d = "r"; // doprava
         } else if(key === 40 && this.d !== "u") {
-            this.d = "d"; // down
+            this.d = "d"; // dolu
         }
     }
 
-    play() {
+    play() { // funkce která spustí vše potřebné
         document.addEventListener("keydown", e => this.direction(e)); // zavolá se při kliku na šipky
         this.game = setInterval(() => this.logic(), this.interval); // this.logic() se zopakuje 100x/s (this.interval)
     }
