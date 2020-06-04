@@ -14,7 +14,7 @@ class SnakeGame {
             x: 9 * this.box, // horizontalně vycentrované
             y: 10 * this.box, // vertikálně vycentrované
         };
-        this.food = this.foodObject(); // vygeneruje pozici (x,y) pro jablko
+        this.food = this.newPos(); // vygeneruje pozici (x,y) pro jablko
         this.score = 0; // skóre hry
         this.img = {
             ground: new Image(), // pozadí canvas
@@ -27,8 +27,8 @@ class SnakeGame {
             eat: new Audio('audio/eat.mp3') // zvuk při nažrání :D
         };
         // nastavení hlasitosti zvuku (1 = orig.)
-        this.audio.dead.volume = 0.35;
-        this.audio.eat.volume = 0.75;
+        this.audio.dead.volume = 0.35 || parseFloat(localStorage.getItem('deadVolume')) / 100;
+        this.audio.eat.volume = 0.75 || parseFloat(localStorage.getItem('eatVolume')) / 100;
         //časovač, více v logic()
         this.time = 0;
     }
@@ -36,7 +36,7 @@ class SnakeGame {
     /**
      * @returns {{x: number, y: number}}
      */
-    foodObject() { // funkce na vytvoření nového místa pro jablko
+    newPos() { // funkce na vytvoření nové pozice
         return {
             x: Math.floor(Math.random() * 17 + 1) * this.box,
             y: Math.floor(Math.random() * 15 + 3) * this.box
@@ -91,11 +91,11 @@ class SnakeGame {
         if(!localStorage.getItem('Snake_maxScore')) localStorage.setItem('Snake_maxScore', '0'); // pokud v localStorage není uloženo nejvyšší skóre, tak bude nastaveno na nula.
 
         if(snakeX === this.food.x && snakeY === this.food.y) {
-            this.food = this.foodObject(); // nové místo pro jídlo
+            this.food = this.newPos(); // nové místo pro jídlo
             this.score++; // přidá se bod do skóre
             this.audio.eat.play(); // spustí eat.mp3 zvuk
 
-            if (snakeX === this.food.x && snakeY === this.food.y) this.food = this.foodObject(); // pokud se vygeneruje jídlo na stejné pozici vygeneruje se znova
+            if (snakeX === this.food.x && snakeY === this.food.y) this.food = this.newPos(); // pokud se vygeneruje jídlo na stejné pozici vygeneruje se znova
             if (this.score > parseInt(localStorage.getItem('Snake_maxScore'))) { // pokud je skóre větší jak to největší uložené
                 localStorage.setItem('Snake_maxScore', this.score); // nastaví se aktuální skóre do localStorage
             }

@@ -32,7 +32,15 @@ const canvasUtils = {
         // restroke the interior of the rect for a more solid colored center
         ctx.lineWidth=2;
         ctx.strokeRect(x+2,y+2,w-4,h-4);
-    }
+    },
+    /**
+     * @param point
+     * @param circle
+     * @returns {boolean}
+     *
+     * @see https://lavrton.com/hit-region-detection-for-html5-canvas-and-how-to-listen-to-click-events-on-canvas-shapes-815034d7e9f8/
+     */
+    isIntersect: (point, circle) => Math.sqrt((point.x-circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius,
 };
 
 
