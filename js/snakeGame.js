@@ -6,7 +6,7 @@ class SnakeGame {
     constructor(canvas) {
         this.canv = canvas; // využije se při konci hry (aby se spustila nová)
         this.ctx = canvas.getContext('2d'); // context canvasu 2D
-        this.font = '40px Fredoka One'; // písmo
+        this.font = '40px Fredoka One';
         this.interval = 1000/10; // interval kolikrát se má zopakovat draw() za sekund, 10 snímků za sekundu
         this.box = 32; // 19x32 = 608 (výška a šířka canvas), velikost hada/jídla
         this.snake = []; // pole hada (ukládají se pozice každého čtverce hada)
@@ -27,10 +27,10 @@ class SnakeGame {
             eat: new Audio('audio/eat.mp3') // zvuk při nažrání :D
         };
         // nastavení hlasitosti zvuku (1 = orig.)
-        this.audio.dead.volume = 0.35 || parseFloat(localStorage.getItem('deadVolume')) / 100;
-        this.audio.eat.volume = 0.75 || parseFloat(localStorage.getItem('eatVolume')) / 100;
+        this.audio.dead.volume = 0.35;
+        this.audio.eat.volume = 0.75;
         //časovač, více v logic()
-        this.time = 0;
+        this.time = 0; // časovač v menu
     }
 
     /**
@@ -83,10 +83,10 @@ class SnakeGame {
         let snakeX = this.snake[0].x;
         let snakeY = this.snake[0].y;
 
-        if(this.d === "l") snakeX -= this.box; // levo
-        if(this.d === "u") snakeY -= this.box; // nahoru
-        if(this.d === "r") snakeX += this.box; // pravo
-        if(this.d === "d") snakeY += this.box; // dolu
+        if(this.dirc === "l") snakeX -= this.box; // levo
+        if(this.dirc === "u") snakeY -= this.box; // nahoru
+        if(this.dirc === "r") snakeX += this.box; // pravo
+        if(this.dirc === "d") snakeY += this.box; // dolu
 
         if(!localStorage.getItem('Snake_maxScore')) localStorage.setItem('Snake_maxScore', '0'); // pokud v localStorage není uloženo nejvyšší skóre, tak bude nastaveno na nula.
 
@@ -126,15 +126,15 @@ class SnakeGame {
      */
     direction(event) {
         let key = event.keyCode;
-        if(key === 37 || key === 38 || key === 39 || key === 40) this.started = true;
-        if(key === 37 && this.d !== "r") {
-            this.d = "l"; // doleva
-        } else if(key === 38 && this.d !== "d") {
-            this.d = "u"; // nahoru
-        } else if(key === 39 && this.d !== "l") {
-            this.d = "r"; // doprava
-        } else if(key === 40 && this.d !== "u") {
-            this.d = "d"; // dolu
+        if (key === 37 || key === 38 || key === 39 || key === 40) this.started = true;
+        if (key === 37 && this.dirc !== "r") {
+            this.dirc = "l"; // doleva
+        } else if (key === 38 && this.dirc !== "d") {
+            this.dirc = "u"; // nahoru
+        } else if (key === 39 && this.dirc !== "l") {
+            this.dirc = "r"; // doprava
+        } else if (key === 40 && this.dirc !== "u") {
+            this.dirc = "d"; // dolu
         }
     }
 
@@ -142,8 +142,8 @@ class SnakeGame {
         document.addEventListener("keydown", e => this.direction(e)); // zavolá se při kliku na šipky
         this.game = setInterval(() => this.logic(), this.interval); // this.logic() se zopakuje 100x/s (this.interval)
     }
-
 }
+
 
 /**
  * @type {SnakeGame}
