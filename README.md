@@ -19,7 +19,7 @@ Klasická arkádová hra objektově naprogramovaná v Javascriptu s využitím E
 ## Struktura hry
 - **snakeGame** (hlavní třída)
   - `constructor(canvas)`
-  - `foodObject()`
+  - `newPos()`
   - `static bodyCollision(head, array)`
   - `drawCanvas()`
   - `logic()`
