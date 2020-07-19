@@ -5,7 +5,7 @@ class SnakeGame {
      */
     constructor(canvas) {
         this.canv = canvas; // využije se při konci hry (aby se spustila nová)
-        this.ctx = canvas.getContext('2d'); // context canvasu 2D
+        this.ctx = canvas.getContext('2d');// context canvasu 2D
         this.font = '40px Fredoka One';
         this.interval = 1000/10; // interval kolikrát se má zopakovat draw() za sekund, 10 snímků za sekundu
         this.box = 32; // 19x32 = 608 (výška a šířka canvas), velikost hada/jídla
@@ -13,6 +13,14 @@ class SnakeGame {
         this.snake[0] = { // první část hada (první čtvereček)
             x: 9 * this.box, // horizontalně vycentrované
             y: 10 * this.box, // vertikálně vycentrované
+        };
+        this.keys = {
+            up: 'ArrowUp',
+            left: 'ArrowLeft',
+            right: 'ArrowRight',
+            down: 'ArrowDown',
+
+            esc: 'Escape'
         };
         this.food = this.newPos(); // vygeneruje pozici (x,y) pro jablko
         this.score = 0; // skóre hry
@@ -25,6 +33,10 @@ class SnakeGame {
         this.audio = {
             dead: new Audio('audio/dead.mp3'), // zvuk při smrti
             eat: new Audio('audio/eat.mp3') // zvuk při nažrání :D
+        };
+        this.snakeProperties = {
+            fillColor: "green",
+            shadowColor: "#e8f5e9",
         };
         // nastavení hlasitosti zvuku (1 = orig.)
         this.audio.dead.volume = 0.35;
@@ -74,10 +86,10 @@ class SnakeGame {
         }
 
         for(let i = 0; i < this.snake.length ; i++){ // vykreslování hada
-            this.ctx.fillStyle = "green";
+            this.ctx.fillStyle = this.snakeProperties.fillColor;
             this.ctx.fillRect(this.snake[i].x,this.snake[i].y,this.box,this.box); // čtvereček hada
 
-            canvasUtils.shadowRect(this.ctx, this.snake[i].x,this.snake[i].y,this.box,this.box,1.5,"#e8f5e9"); // border okolo hada
+            canvasUtils.shadowRect(this.ctx, this.snake[i].x,this.snake[i].y,this.box,this.box,1.5, this.snakeProperties.shadowColor); // border okolo hada
         }
 
         let snakeX = this.snake[0].x;
@@ -125,21 +137,22 @@ class SnakeGame {
      * @param event
      */
     direction(event) {
-        let key = event.keyCode;
-        if (key === 37 || key === 38 || key === 39 || key === 40) this.started = true;
-        if (key === 37 && this.dirc !== "r") {
-            this.dirc = "l"; // doleva
-        } else if (key === 38 && this.dirc !== "d") {
-            this.dirc = "u"; // nahoru
-        } else if (key === 39 && this.dirc !== "l") {
-            this.dirc = "r"; // doprava
-        } else if (key === 40 && this.dirc !== "u") {
-            this.dirc = "d"; // dolu
-        }
+        let key = event.key;
+        let keys = this.keys;
+
+        if (key === keys.right || key === keys.down || key === keys.up || key === keys.left) this.started = true;
+
+        if (key === keys.left && this.dirc !== "r") this.dirc = "l"; // doleva
+        else if (key === keys.up && this.dirc !== "d") this.dirc = "u"; // nahoru
+        else if (key === keys.right && this.dirc !== "l") this.dirc = "r"; // doprava
+        else if (key === keys.down && this.dirc !== "u") this.dirc = "d"; // dolu
     }
 
-    play() { // funkce která spustí vše potřebné
-        document.addEventListener("keydown", e => this.direction(e)); // zavolá se při kliku na šipky
+    play() {
+        // zavolá se při kliku na šipky
+        document.addEventListener("keydown", e => {
+            this.direction(e);
+        });
         this.game = setInterval(() => this.logic(), this.interval); // this.logic() se zopakuje 100x/s (this.interval)
     }
 }
