@@ -1,4 +1,3 @@
-// Hlavní třída
 class SnakeGame {
     /**
      * @param canvas
@@ -20,11 +19,21 @@ class SnakeGame {
             ground: new Image(), // pozadí canvas
             apple: new Image() // jablko
         };
+        this.controls = {
+            UP: ['ArrowUp', 'KeyW'],
+            LEFT: ['ArrowLeft', 'KeyA'],
+            DOWN: ['ArrowDown', 'KeyS'],
+            RIGHT: ['ArrowRight', 'KeyD']
+        };
         this.img.ground.src = "img/ground.png";
         this.img.apple.src = "img/apple.png";
         this.audio = {
             dead: new Audio('audio/dead.mp3'), // zvuk při smrti
             eat: new Audio('audio/eat.mp3') // zvuk při nažrání :D
+        };
+        this.snakeProperties = {
+            fillColor: "green",
+            shadowColor: "#e8f5e9",
         };
         // nastavení hlasitosti zvuku (1 = orig.)
         this.audio.dead.volume = 0.35;
@@ -74,19 +83,19 @@ class SnakeGame {
         }
 
         for(let i = 0; i < this.snake.length ; i++){ // vykreslování hada
-            this.ctx.fillStyle = "green";
+            this.ctx.fillStyle = this.snakeProperties.fillColor;
             this.ctx.fillRect(this.snake[i].x,this.snake[i].y,this.box,this.box); // čtvereček hada
 
-            canvasUtils.shadowRect(this.ctx, this.snake[i].x,this.snake[i].y,this.box,this.box,1.5,"#e8f5e9"); // border okolo hada
+            canvasUtils.shadowRect(this.ctx, this.snake[i].x,this.snake[i].y,this.box,this.box,1.5, this.snakeProperties.shadowColor); // border okolo hada
         }
 
         let snakeX = this.snake[0].x;
         let snakeY = this.snake[0].y;
 
-        if(this.dirc === "l") snakeX -= this.box; // levo
-        if(this.dirc === "u") snakeY -= this.box; // nahoru
-        if(this.dirc === "r") snakeX += this.box; // pravo
-        if(this.dirc === "d") snakeY += this.box; // dolu
+        if(this.controls.LEFT.includes(this.dirc)) snakeX -= this.box; // levo
+        if(this.controls.UP.includes(this.dirc)) snakeY -= this.box; // nahoru
+        if(this.controls.RIGHT.includes(this.dirc)) snakeX += this.box; // pravo
+        if(this.controls.DOWN.includes(this.dirc)) snakeY += this.box; // dolu
 
         if(!localStorage.getItem('Snake_maxScore')) localStorage.setItem('Snake_maxScore', '0'); // pokud v localStorage není uloženo nejvyšší skóre, tak bude nastaveno na nula.
 
@@ -125,17 +134,13 @@ class SnakeGame {
      * @param event
      */
     direction(event) {
-        let key = event.keyCode;
-        if (key === 37 || key === 38 || key === 39 || key === 40) this.started = true;
-        if (key === 37 && this.dirc !== "r") {
-            this.dirc = "l"; // doleva
-        } else if (key === 38 && this.dirc !== "d") {
-            this.dirc = "u"; // nahoru
-        } else if (key === 39 && this.dirc !== "l") {
-            this.dirc = "r"; // doprava
-        } else if (key === 40 && this.dirc !== "u") {
-            this.dirc = "d"; // dolu
-        }
+        let key = event.code;
+        if([].concat(...Object.values(this.controls)).includes(key)) this.started = true;
+
+        if (this.controls.LEFT.includes(key) && !this.controls.RIGHT.includes(key)) this.dirc = key; // doleva
+        else if (this.controls.UP.includes(key) && !this.controls.DOWN.includes(key)) this.dirc = key; // nahoru
+        else if (this.controls.RIGHT.includes(key) && !this.controls.LEFT.includes(key)) this.dirc = key; // doprava
+        else if (this.controls.DOWN.includes(key) && !this.controls.UP.includes(key)) this.dirc = key; // dolu
     }
 
     play() { // funkce která spustí vše potřebné
